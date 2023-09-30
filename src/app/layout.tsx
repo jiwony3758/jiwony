@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Zoni',
-  description: '지오니 사이트',
+  description: '지오니',
 };
 
 export default function RootLayout({
@@ -21,14 +21,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <header>
           <nav>
-            <Link href="">
-              <Image
-                src="/Zoni.svg"
-                alt="Zoni Logo"
-                width={57}
-                height={32}
-                priority
-              />
+            <Link href="/"
+              style={{
+                fontFamily:"PyeongChangPeace-Bold",
+              }}
+            >
+              Zoni
             </Link>
           </nav>
         </header>
