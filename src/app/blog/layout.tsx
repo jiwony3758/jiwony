@@ -1,10 +1,14 @@
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
-export const metaData: Metadata = {
-  title: 'Blog | Zoni',
-  description: '지오니 블로그',
+export const metadata: Metadata = {
+  title: "Blog | Zoni",
+  description: "지오니 블로그",
 };
 
-export default function BlogLayout() {
-  return <></>;
+export default function BlogLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <main>{children}</main>;
 }

@@ -1,6 +1,7 @@
 @font-face {
-  font-family: 'PyeongChangPeace-Bold';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/PyeongChangPeace-Bold.woff2') format('woff2');
+  font-family: "PyeongChangPeace-Bold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/PyeongChangPeace-Bold.woff2")
+    format("woff2");
   font-weight: 700;
   font-style: normal;
 }
@@ -8,9 +9,9 @@
 :root {
   --max-width: 1140px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --background-rgb: #ffffff;
 
@@ -67,6 +68,14 @@ header {
   border-bottom: 1px solid var(--border-primary);
   backdrop-filter: blur(1.5rem);
   z-index: 6;
+}
+
+main {
+  padding-top: 48px;
+  margin-top: 60px;
+  min-height: 100vh;
+  overflow: auto;
+  width: 100%;
 }
 
 a {
