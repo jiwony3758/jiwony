@@ -1,6 +1,8 @@
 import { http } from "@/adapter/infrastructure/http";
-import PostItem from "@/components/blog/PostItem";
+import DateView from "@/components/DateView";
 import { PostListResponseType } from "@/types/post";
+import "./style.css";
+import Link from "next/link";
 
 export default async function Blog() {
   const { posts }: PostListResponseType = await http.request({
@@ -11,19 +13,30 @@ export default async function Blog() {
     }
   });
 
-  // console.log(postsResponse);
 
+  const convertCategoryPath = (category: string) => {
+    console.log(category);
+    return category.replaceAll(",", "/") + "/";
+  }
+  console.log(posts);
   return <ul className="post-list">
-  {posts.map(({
-    id, title, description, date, tags
-  }) => (
-      <PostItem 
-          key={id} 
-          date={date}
-          title={title}
-          description={description}
-          tags={tags}
-      />
-  ))}
-</ul>;
+    {posts.map(({
+      id, title, description, date, category="", tags
+    }) => (
+      <li className="post-item" key={id}>
+        <Link href={`/blog/posts/${category.length > 0 ? convertCategoryPath(category) : ""}${id}`}>
+          <div className="post-header">
+            {tags && tags.length > 0 ?
+              <span className="tag-list">
+                {tags.map((tag, index) => <span className="tag" key={index}>{tag}</span>)}
+              </span>
+              : <></>
+            }
+            <DateView dateString={date} />
+          </div>
+          <span className="post-title">{title}</span>
+          <span className="post-description">{description}</span>
+        </Link>
+      </li>
+    ))}</ul>
 }
