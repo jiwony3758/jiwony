@@ -5,14 +5,38 @@ import { PostMetaDataLegacyType, PostMetaDataType } from "@/types/post";
 
 const postsDirectory = path.join(process.cwd(), "src/content/posts");
 
+export const findFilePaths = (directory: string, fileNameExtension: string) => {
+  const results: string[] = [];
+
+  const searchFile = (dir: string) => {
+    const files = fs.readdirSync(dir);
+
+    for (const file of files) {
+      const filePath = path.join(dir, file);
+      const fileStat = fs.statSync(filePath);
+
+      if(fileStat.isDirectory()){
+        searchFile(filePath);
+      }else if(file.endsWith(fileNameExtension)) {
+        results.push(filePath);
+      }
+    }
+  }
+
+  searchFile(postsDirectory);
+  return results;
+}
+ 
 export const getSortedPostsData = () => {
-  const fileNames = fs.readdirSync(postsDirectory);
+  const files = findFilePaths(postsDirectory, ".md");
 
-  const allPostsData: PostMetaDataType[] = fileNames.map((fileName) => {
-    const id = fileName.replace(/\.md$/, "");
 
-    const fullPath = path.join(postsDirectory, fileName);
-    const postContent = fs.readFileSync(fullPath, "utf-8");
+  const allPostsData: PostMetaDataType[] = files.map((file) => {
+    const pathArray = file.split("/");
+    const filename = pathArray[pathArray.length - 1];
+    const id = filename.replace(/\.md$/, "");
+
+    const postContent = fs.readFileSync(file, "utf-8");
 
     const matterResult = matter(postContent);
     const { data: postMetaData } = matterResult;
@@ -21,6 +45,7 @@ export const getSortedPostsData = () => {
       title,
       date,
       description,
+      category,
       tags: stringTags,
     } = postMetaData as PostMetaDataLegacyType;
 
@@ -28,6 +53,7 @@ export const getSortedPostsData = () => {
       id,
       title,
       date,
+      category,
       description,
       tags: stringTags.split(","),
     };
