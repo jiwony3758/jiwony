@@ -7,8 +7,8 @@ import Link from "next/link";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Zoni",
-  description: "지오니",
+  title: "Jiwony",
+  description: "Jiwony Web Site",
 };
 
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
                 fontFamily: "PyeongChangPeace-Bold",
               }}
             >
-              Zoni
+              Jiwony
             </Link>
           </nav>
         </header>
