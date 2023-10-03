@@ -21,10 +21,10 @@ interface IHttpErrorParam {
   message: string;
 }
 
-export class HttpError implements IHttpError{
+export class HttpError implements IHttpError {
   readonly statusCode: number;
   readonly message: string;
-  constructor({statusCode, message}: IHttpErrorParam){
+  constructor({ statusCode, message }: IHttpErrorParam) {
     this.statusCode = statusCode;
     this.message = message;
   }
@@ -32,24 +32,23 @@ export class HttpError implements IHttpError{
 
 class Http implements IHttp {
   async request(requestOption: IRequestOption): Promise<any> {
-      const option: RequestInit = {method: requestOption.method};
-      if (requestOption?.headers)
-          option.headers = new Headers(requestOption.headers);
-      if (requestOption?.body)
-          option.body = JSON.stringify(requestOption.body);
+    const option: RequestInit = { method: requestOption.method };
+    if (requestOption?.headers)
+      option.headers = new Headers(requestOption.headers);
+    if (requestOption?.body) option.body = JSON.stringify(requestOption.body);
 
-      try {
-          const res = await fetch(requestOption.url, requestOption);
-          if(res.ok){
-            return await res.json();
-          }
-          throw new HttpError({
-            statusCode: res?.status ?? 500,
-            message: res?.statusText ?? "알 수 없는 에러입니다."
-          });
-      } catch (e) {
-          return e;
+    try {
+      const res = await fetch(requestOption.url, requestOption);
+      if (res.ok) {
+        return await res.json();
       }
+      throw new HttpError({
+        statusCode: res?.status ?? 500,
+        message: res?.statusText ?? "알 수 없는 에러입니다.",
+      });
+    } catch (e) {
+      return e;
+    }
   }
 }
 
