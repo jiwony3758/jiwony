@@ -1,9 +1,7 @@
 import path from "path";
 import fs from "fs";
-import matter, { GrayMatterFile } from "gray-matter";
+import matter from "gray-matter";
 import { PostMetaDataLegacyType, PostMetaDataType } from "@/types/post";
-import { remark } from "remark";
-import html from "remark-html";
 import remarkGfm from "remark-gfm";
 import rehypePrettyCode from "rehype-pretty-code";
 import { unified } from "unified";
@@ -87,7 +85,7 @@ export const getSortedPostsData = () => {
 const getFileInfo = (id: string, category: string[]): FileInfo => {
   const fullMdPath = path.join(postsDirectory, ...category, `${id}.md`);
   const mdExist = fs.existsSync(fullMdPath);
-  console.log(mdExist);
+
   const existFilePath = mdExist 
     ? fullMdPath 
     : path.join(postsDirectory, ...category, `${id}.mdx`);
@@ -106,7 +104,7 @@ export const getPostData = async (
   id: string, 
   category: string[]
 ) => {
-  console.log(id);
+
   const { matterResult } = getFileInfo(id, category);
 
 
