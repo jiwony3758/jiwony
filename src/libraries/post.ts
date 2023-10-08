@@ -1,10 +1,20 @@
 import path from "path";
 import fs from "fs";
-import matter from "gray-matter";
+import matter, { GrayMatterFile } from "gray-matter";
 import { PostMetaDataLegacyType, PostMetaDataType } from "@/types/post";
 import { remark } from "remark";
 import html from "remark-html";
 import remarkGfm from "remark-gfm";
+import rehypePrettyCode from "rehype-pretty-code";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
+
+type FileInfo = {
+  matterResult: matter.GrayMatterFile<string>
+  isMdFile: boolean;
+}
 
 const postsDirectory = path.join(process.cwd(), "src/content/posts");
 
@@ -31,13 +41,16 @@ export const findFilePaths = (directory: string, fileNameExtension: string) => {
 }
  
 export const getSortedPostsData = () => {
-  const files = findFilePaths(postsDirectory, ".md");
+  const mdFiles = findFilePaths(postsDirectory, ".md");
+  const mdxFiles = findFilePaths(postsDirectory, ".mdx");
+
+  const files = [...mdFiles, ...mdxFiles];
 
 
   const allPostsData: PostMetaDataType[] = files.map((file) => {
     const pathArray = file.split("/");
     const filename = pathArray[pathArray.length - 1];
-    const id = filename.replace(/\.md$/, "");
+    const id = filename.replace(/\.md$|\.mdx$/, "");
 
     const postContent = fs.readFileSync(file, "utf-8");
 
@@ -71,25 +84,45 @@ export const getSortedPostsData = () => {
   });
 };
 
+const getFileInfo = (id: string, category: string[]): FileInfo => {
+  const fullMdPath = path.join(postsDirectory, ...category, `${id}.md`);
+  const mdExist = fs.existsSync(fullMdPath);
+  console.log(mdExist);
+  const existFilePath = mdExist 
+    ? fullMdPath 
+    : path.join(postsDirectory, ...category, `${id}.mdx`);
 
-export async function getPostData(
+  const fileContents = fs.readFileSync(existFilePath, 'utf8');
+
+  const matterResult = matter(fileContents);
+  
+  return {
+    isMdFile: mdExist,
+    matterResult,
+  }
+}
+
+export const getPostData = async (
   id: string, 
   category: string[]
-) {
+) => {
+  console.log(id);
+  const { isMdFile, matterResult } = getFileInfo(id, category);
 
-  const fullPath = path.join(postsDirectory, ...category, `${id}.md`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
 
-  // Use gray-matter to parse the post metadata section
-  const matterResult = matter(fileContents);
-
-  const processedContent = await remark()
+  const processedContent = await unified()
+    .use(remarkParse)
     .use(remarkGfm)
-    .use(html)
+    .use(remarkRehype)
+    .use(rehypePrettyCode, {
+      grid: true,
+      defaultLang: "js",
+      theme: "dark-plus"
+    })
+    .use(rehypeStringify)
     .process(matterResult.content);
-  const contentHtml = processedContent.toString();
 
-  // Combine the data with the id
+  const contentHtml = processedContent.toString();
   return {
     id,
     contentHtml,

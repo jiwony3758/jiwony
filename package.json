@@ -19,11 +19,17 @@
     "next": "13.5.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "rehype-pretty-code": "^0.10.1",
+    "rehype-stringify": "^10.0.0",
     "remark": "^15.0.1",
     "remark-gfm": "^4.0.0",
     "remark-html": "^16.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.0.0",
+    "shiki": "^0.14.4",
     "styled-components": "^6.0.8",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "unified": "^11.0.3"
   },
   "devDependencies": {
     "prettier": "^3.0.3"

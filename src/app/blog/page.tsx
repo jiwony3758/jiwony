@@ -12,7 +12,7 @@ export default async function Blog() {
       revalidate: 5
     }
   });
-
+  console.log(posts);
 
   const convertCategoryPath = (category: string) => {
     return category.replaceAll(",", "/") + "/";
