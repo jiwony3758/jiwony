@@ -4,12 +4,18 @@
 	flex-direction: column;
 	gap: 16px;
 	margin: 0 auto;
+	padding: 0 40px;
 }
 
 .post-item {
 	width: auto;
-	padding: 20px 0;
 	transition: all 100ms ease-in;
+}
+
+.post-item a {
+	display: inline-block;
+	padding: 20px;
+	width: 100%;
 }
 
 .post-item:hover{
@@ -21,6 +27,11 @@
 	gap: 8px;
 	color: var(--text-primary);
 	font-weight: bold;
+	flex-wrap: wrap;
+}
+
+.post-item .tag {
+	white-space: nowrap;
 }
 
 .post-title {
@@ -33,6 +44,7 @@
 .post-header {
 	display: flex;
 	justify-content: space-between;
+	gap: 8px;
 }
 
 .post-date {
