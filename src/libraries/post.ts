@@ -107,7 +107,7 @@ export const getPostData = async (
   category: string[]
 ) => {
   console.log(id);
-  const { isMdFile, matterResult } = getFileInfo(id, category);
+  const { matterResult } = getFileInfo(id, category);
 
 
   const processedContent = await unified()

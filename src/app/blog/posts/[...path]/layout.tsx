@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from "next"
+import { Metadata } from "next"
 
 
 type Props = {
@@ -7,8 +7,7 @@ type Props = {
 }
 
 export async function generateMetadata(
-  { params, searchParams }: Props,
-  parent: ResolvingMetadata
+  { params }: Props,
 ): Promise<Metadata> {
   const { path } = params;
   const id = path[path.length - 1];
@@ -16,7 +15,7 @@ export async function generateMetadata(
   return {
     title: decodeURI(id),
   }
-};
+}
 
 
 export default function PostLayout({
