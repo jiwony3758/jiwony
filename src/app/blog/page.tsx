@@ -15,10 +15,8 @@ export default async function Blog() {
 
 
   const convertCategoryPath = (category: string) => {
-    console.log(category);
     return category.replaceAll(",", "/") + "/";
   }
-  console.log(posts);
   return <ul className="post-list">
     {posts.map(({
       id, title, description, date, category="", tags
