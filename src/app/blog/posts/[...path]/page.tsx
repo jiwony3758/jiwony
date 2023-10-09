@@ -1,7 +1,16 @@
 import DateView from '@/components/DateView';
 import React from 'react'
 import "./style.css";
-import { getPostData } from '@/libraries/post';
+import { getAllPostPaths, getPostData } from '@/libraries/post';
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+	const paths = getAllPostPaths();
+	return paths.map(({ params }: { params: { path: string[] }}) => ({
+    path: params.path,
+  }))
+}
 
 const parsePath = (path: string[]) => {
 
@@ -14,17 +23,15 @@ const parsePath = (path: string[]) => {
 		id = path[path.length - 1];
 		category.push(...path.slice(0, path.length - 1));
 	}
-  console.log(path)
-  console.log(id, category);
+
   return {
     id, category
   }
 }
 
 export default async function Post({ params }: { params: { path: string[] }}) {
-
+  console.log(params);
   const { path } = params;
-  // const pathString = path.toString().replaceAll(",", "/");
 
   const { id, category } = parsePath(path);
 

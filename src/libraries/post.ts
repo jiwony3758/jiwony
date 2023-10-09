@@ -35,7 +35,8 @@ export const findFilePaths = (directory: string, fileNameExtension: string) => {
       if(fileStat.isDirectory()){
         searchFile(filePath);
       }else if(file.endsWith(fileNameExtension)) {
-        results.push(filePath);
+        const relativePath = path.relative(directory, filePath);
+        results.push(relativePath);
       }
     }
   }
@@ -52,11 +53,12 @@ export const getSortedPostsData = () => {
 
 
   const allPostsData: PostMetaDataType[] = files.map((file) => {
-    const pathArray = file.split("/");
+    const fullPath = path.join(postsDirectory, file);
+    const pathArray = fullPath.split("/");
     const filename = pathArray[pathArray.length - 1];
     const id = filename.replace(/\.md$|\.mdx$/, "");
 
-    const postContent = fs.readFileSync(file, "utf-8");
+    const postContent = fs.readFileSync(fullPath, "utf-8");
 
     const matterResult = matter(postContent);
     const { data: postMetaData } = matterResult;
@@ -88,6 +90,23 @@ export const getSortedPostsData = () => {
   });
 };
 
+export function getAllPostPaths() {
+  const mdFiles = findFilePaths(postsDirectory, ".md");
+  const mdxFiles = findFilePaths(postsDirectory, ".mdx");
+
+  const files = [...mdFiles, ...mdxFiles];
+  console.log(files);
+  return files.map((file) => {
+    const arrayPath = file.split("/");
+    arrayPath[arrayPath.length - 1] = arrayPath[arrayPath.length - 1].replace(/\.md$|\.mdx$/, "");
+    return {
+      params: {
+        path: arrayPath,
+      },
+    }
+  })
+}
+
 const getFileInfo = (id: string, category: string[]): FileInfo => {
   const fullMdPath = path.join(postsDirectory, ...category, `${id}.md`);
   const mdExist = fs.existsSync(fullMdPath);
@@ -95,7 +114,6 @@ const getFileInfo = (id: string, category: string[]): FileInfo => {
   const existFilePath = mdExist 
     ? fullMdPath 
     : path.join(postsDirectory, ...category, `${id}.mdx`);
-
   const fileContents = fs.readFileSync(existFilePath, 'utf8');
 
   const matterResult = matter(fileContents);
