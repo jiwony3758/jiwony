@@ -3,7 +3,7 @@ import React from 'react'
 import "./style.css";
 import { getPostData } from '@/libraries/post';
 
-const parsePath = (path: string) => {
+const parsePath = (path: string[]) => {
 
 	let id: string = "";
 	const category: string[] = [];
@@ -14,6 +14,8 @@ const parsePath = (path: string) => {
 		id = path[path.length - 1];
 		category.push(...path.slice(0, path.length - 1));
 	}
+  console.log(path)
+  console.log(id, category);
   return {
     id, category
   }
@@ -22,9 +24,10 @@ const parsePath = (path: string) => {
 export default async function Post({ params }: { params: { path: string[] }}) {
 
   const { path } = params;
-  const pathString = path.toString().replaceAll(",", "/");
+  // const pathString = path.toString().replaceAll(",", "/");
 
-  const { id, category } = parsePath(pathString);
+  const { id, category } = parsePath(path);
+
   const postData = await getPostData(id, category);
 
 
