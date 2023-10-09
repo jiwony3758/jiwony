@@ -20,7 +20,7 @@
   --text-description: #696969;
   --text-description2: #acacac;
 
-  --border-primary: #e7e7e7;
+  --border-primary: #cecece;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,6 +44,7 @@
 html,
 body {
   width: 100vw;
+  margin: 0px;
 }
 
 body {
