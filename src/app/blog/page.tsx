@@ -1,17 +1,11 @@
-import { http } from "@/adapter/infrastructure/http";
 import DateView from "@/components/DateView";
-import { PostListResponseType } from "@/types/post";
+import { PostMetaDataType } from "@/types/post";
 import "./style.css";
 import Link from "next/link";
+import { getSortedPostsData } from "@/libraries/post";
 
 export default async function Blog() {
-  const { posts }: PostListResponseType = await http.request({
-    url: "http://localhost:3000/api/blog/posts",
-    method: "GET",
-    next: {
-      revalidate: 5
-    }
-  });
+  const posts: PostMetaDataType[] = getSortedPostsData();
 
   const convertCategoryPath = (category: string) => {
     return category.replaceAll(",", "/") + "/";

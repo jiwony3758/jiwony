@@ -7,6 +7,7 @@ export type PostMetaDataLegacyType = {
 };
 
 export type PostMetaDataType = {
+  id: string;
   title: string;
   description: string;
   date: string;

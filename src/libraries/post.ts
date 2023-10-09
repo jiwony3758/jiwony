@@ -14,6 +14,12 @@ type FileInfo = {
   isMdFile: boolean;
 }
 
+type PostData = {
+  id: string;
+  contentHtml: string;
+  [key: string]: unknown;
+}
+
 const postsDirectory = path.join(process.cwd(), "src/content/posts");
 
 export const findFilePaths = (directory: string, fileNameExtension: string) => {
@@ -103,7 +109,7 @@ const getFileInfo = (id: string, category: string[]): FileInfo => {
 export const getPostData = async (
   id: string, 
   category: string[]
-) => {
+): Promise<PostData> => {
 
   const { matterResult } = getFileInfo(id, category);
 
