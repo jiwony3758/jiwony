@@ -34,17 +34,18 @@
 	white-space: nowrap;
 }
 
-.post-title {
+.post-item-title {
 	display: block;
-	font-size: 1.25rem;
+	margin: 0;
 	font-weight: 700;
 	margin-top: 2px;
 }
 
-.post-header {
+.post-item-header {
 	display: flex;
 	justify-content: space-between;
 	gap: 8px;
+	margin: 0;
 }
 
 .post-date {
@@ -52,7 +53,7 @@
 	color: var(--text-description2);
 }
 
-.post-description {
+.post-item-description {
 	display: block;
 	margin-top: 8px;
 	color: var(--text-description);

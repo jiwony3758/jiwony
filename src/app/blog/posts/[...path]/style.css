@@ -6,6 +6,11 @@ article {
   padding: 0 20px;
 }
 
+.post-header {
+  padding: 4rem 0;
+  text-align: center;
+}
+
 .title {
   font-size: 2rem;
   line-height: 1.3;
@@ -43,12 +48,14 @@ table td {
 
 /* code block */
 pre {
-  border: solid 1px white;
   padding: 8px;
   border-radius: 5px;
   position: relative;
 }
 
-div[data-rehype-pretty-code-fragment] {
-  
+.content h2, .content h3 {
+  border-bottom: solid 1px;
+  border-color: var(--border-primary);
+  margin-top: 5rem;
+  color: var(--text-primary);
 }

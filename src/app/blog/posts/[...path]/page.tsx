@@ -8,7 +8,7 @@ export default async function Post({ params }: { params: { path: string[] }}) {
 
   const { path } = params;
   const pathString = path.toString().replaceAll(",", "/");
-  
+
   const { postData } = await http.request({
     url: `http://localhost:3000/api/blog/posts/${pathString}`,
     method: "GET",
@@ -19,10 +19,10 @@ export default async function Post({ params }: { params: { path: string[] }}) {
 
   return (
     <>
-			<h1 className="title">{postData.title}</h1>
-			<br />
-			<DateView dateString={postData.date} />
-			<br/>
+      <div className="post-header">
+        <h1 className="title">{postData.title}</h1>
+        <DateView dateString={postData.date} />
+      </div>
 			<div className="content" dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
     </>
   )

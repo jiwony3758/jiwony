@@ -1,13 +1,12 @@
 import { Metadata } from "next"
 
 
-type Props = {
+type MetadataProps = {
   params: { path: string[] }
-  searchParams: { [key: string]: string | string[] | undefined }
 }
 
 export async function generateMetadata(
-  { params }: Props,
+  { params }: MetadataProps,
 ): Promise<Metadata> {
   const { path } = params;
   const id = path[path.length - 1];
