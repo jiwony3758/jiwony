@@ -35,6 +35,6 @@ SEO(Search Engine Optimization)는 검색 엔진 최적화라는 말로 웹사�
 &nbsp;
 유명한 사이트에서 우리 사이트를 링크를 했다면 더 많은 트래픽을 얻을 수 있다.
 
-### 참고 문서
+**참조**
 - [SEO - MDN Web Docs Glossary: Definitions of Web-related terms | MDN](https://developer.mozilla.org/en-US/docs/Glossary/SEO)
 - [검색 엔진 최적화 - 위키백과, 우리 모두의 백과사전](https://ko.wikipedia.org/wiki/%EA%B2%80%EC%83%89_%EC%97%94%EC%A7%84_%EC%B5%9C%EC%A0%81%ED%99%94)
