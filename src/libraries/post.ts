@@ -54,8 +54,9 @@ export const getSortedPostsData = () => {
 
   const allPostsData: PostMetaDataType[] = files.map((file) => {
     const fullPath = path.join(postsDirectory, file);
-    const pathArray = fullPath.split("/");
-    const filename = pathArray[pathArray.length - 1];
+    const fullPathSplitArray = fullPath.split("/");
+
+    const filename = fullPathSplitArray[fullPathSplitArray.length - 1];
     const id = filename.replace(/\.md$|\.mdx$/, "");
 
     const postContent = fs.readFileSync(fullPath, "utf-8");
@@ -95,7 +96,7 @@ export function getAllPostPaths() {
   const mdxFiles = findFilePaths(postsDirectory, ".mdx");
 
   const files = [...mdFiles, ...mdxFiles];
-  console.log(files);
+
   return files.map((file) => {
     const arrayPath = file.split("/");
     arrayPath[arrayPath.length - 1] = arrayPath[arrayPath.length - 1].replace(/\.md$|\.mdx$/, "");

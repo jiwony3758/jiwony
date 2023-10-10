@@ -30,9 +30,8 @@ const parsePath = (path: string[]) => {
 }
 
 export default async function Post({ params }: { params: { path: string[] }}) {
-  console.log(params);
-  const { path } = params;
 
+  const { path } = params;
   const { id, category } = parsePath(path);
 
   const postData = await getPostData(id, category);

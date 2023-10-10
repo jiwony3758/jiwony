@@ -59,3 +59,22 @@ pre {
   margin-top: 5rem;
   color: var(--text-primary);
 }
+
+.content li {
+  list-style-type: circle;
+}
+
+.content a {
+  color: var(--text-link);
+  background-image: 
+    linear-gradient(var(--background-rgb), var(--background-rgb)), 
+    linear-gradient(var(--text-link), var(--text-link));
+  background-size: 100% 2px, 100% 2px;
+  background-position: 100% 100%, 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 300ms ease-in-out;
+}
+
+.content a:hover {
+  background-size: 0 2px, 100% 2px;
+}
