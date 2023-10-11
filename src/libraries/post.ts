@@ -108,6 +108,19 @@ export function getAllPostPaths() {
   })
 }
 
+export const getAllPostPathStrings = () => {
+  const mdFiles = findFilePaths(postsDirectory, ".md");
+  const mdxFiles = findFilePaths(postsDirectory, ".mdx");
+
+  const files = [...mdFiles, ...mdxFiles];
+
+  return files.map((file) => {
+    // const arrayPath = file.split("/");
+    const path = file.replace(/\.md$|\.mdx$/, "");
+    return path;
+  })
+}
+
 const getFileInfo = (id: string, category: string[]): FileInfo => {
   const fullMdPath = path.join(postsDirectory, ...category, `${id}.md`);
   const mdExist = fs.existsSync(fullMdPath);
