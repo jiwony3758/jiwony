@@ -46,12 +46,7 @@ table td {
 }
 
 
-/* code block */
-pre {
-  padding: 8px;
-  border-radius: 5px;
-  position: relative;
-}
+
 
 .content h2 {
   border-bottom: solid 1px;
@@ -60,7 +55,7 @@ pre {
   color: var(--text-primary);
 }
 
-.content li {
+.content ul li {
   list-style-type: circle;
 }
 
@@ -77,4 +72,46 @@ pre {
 
 .content a:hover {
   background-size: 0 2px, 100% 2px;
+}
+
+/* code block style*/
+pre {
+  margin-top: 0;
+  padding: 8px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  position: relative;
+  overflow: scroll;
+}
+
+.content div[data-rehype-pretty-code-title] {
+  border: solid 2px var(--border-primary);
+  padding-left: 8px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: var(--text-basic);
+}
+
+code {
+  counter-reset: line;
+}
+ 
+code > [data-line]::before {
+  counter-increment: line;
+  content: counter(line);
+ 
+  /* Other styling */
+  display: inline-block;
+  width: 1rem;
+  margin-right: 2rem;
+  text-align: right;
+  color: gray;
+}
+ 
+code[data-line-numbers-max-digits='2'] > [data-line]::before {
+  width: 2rem;
+}
+ 
+code[data-line-numbers-max-digits='3'] > [data-line]::before {
+  width: 3rem;
 }
