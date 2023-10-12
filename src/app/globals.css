@@ -111,6 +111,11 @@ ul {
   list-style: none;
 }
 
+.date {
+  font-size: 0.8rem;
+	color: var(--text-description2);
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

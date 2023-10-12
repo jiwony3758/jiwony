@@ -13,7 +13,7 @@ export function GET() {
   const postsSitemap = allPostPaths.map((pathname) => {
     return `
       <url>
-        <loc>${url}/blog/posts/${pathname}</loc>
+        <loc>${url}/posts/${pathname}</loc>
         <lastmod>${year}-${month}-${day}</lastmod>
       </url>
     `;

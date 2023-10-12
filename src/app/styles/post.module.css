@@ -1,4 +1,4 @@
-.post-list {
+.list {
 	display: flex;
 	max-width: 840px;
 	flex-direction: column;
@@ -7,53 +7,36 @@
 	padding: 0 40px;
 }
 
-.post-item {
+.item {
 	width: auto;
 	transition: all 100ms ease-in;
 }
 
-.post-item a {
+.item a {
 	display: inline-block;
 	padding: 20px;
 	width: 100%;
 }
 
-.post-item:hover{
+.item:hover{
 	transform: scale(1.01);
 }
 
-.post-item .tag-list {
-	display: flex;
-	gap: 8px;
-	color: var(--text-primary);
-	font-weight: bold;
-	flex-wrap: wrap;
-}
-
-.post-item .tag {
-	white-space: nowrap;
-}
-
-.post-item-title {
+.item-title {
 	display: block;
 	margin: 0;
 	font-weight: 700;
 	margin-top: 2px;
 }
 
-.post-item-header {
+.item-header {
 	display: flex;
 	justify-content: space-between;
 	gap: 8px;
 	margin: 0;
 }
 
-.post-date {
-	font-size: 0.8rem;
-	color: var(--text-description2);
-}
-
-.post-item-description {
+.item-description {
 	display: block;
 	margin-top: 8px;
 	color: var(--text-description);

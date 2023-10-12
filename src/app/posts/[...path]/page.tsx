@@ -1,4 +1,4 @@
-import DateView from '@/components/DateView';
+import DateView from '@/app/components/DateView';
 import React from 'react'
 import "./style.css";
 import { getAllPostPaths, getPostData } from '@/libraries/post';
