@@ -4,13 +4,13 @@ const nextConfig = {
     return [
       {
         source: "/sitemap.xml",
-        destination: "/api/sitemap"
+        destination: "/api/sitemap",
       },
       {
         source: "/robots.txt",
-        destination: "/api/robots"
-      }
-    ]
+        destination: "/api/robots",
+      },
+    ];
   },
 };
 

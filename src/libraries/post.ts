@@ -10,15 +10,15 @@ import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 
 type FileInfo = {
-  matterResult: matter.GrayMatterFile<string>
+  matterResult: matter.GrayMatterFile<string>;
   isMdFile: boolean;
-}
+};
 
 type PostData = {
   id: string;
   contentHtml: string;
   [key: string]: unknown;
-}
+};
 
 const postsDirectory = path.join(process.cwd(), "src/content/posts");
 
@@ -32,25 +32,24 @@ export const findFilePaths = (directory: string, fileNameExtension: string) => {
       const filePath = path.join(dir, file);
       const fileStat = fs.statSync(filePath);
 
-      if(fileStat.isDirectory()){
+      if (fileStat.isDirectory()) {
         searchFile(filePath);
-      }else if(file.endsWith(fileNameExtension)) {
+      } else if (file.endsWith(fileNameExtension)) {
         const relativePath = path.relative(directory, filePath);
         results.push(relativePath);
       }
     }
-  }
+  };
 
   searchFile(directory);
   return results;
-}
- 
+};
+
 export const getSortedPostsData = () => {
   const mdFiles = findFilePaths(postsDirectory, ".md");
   const mdxFiles = findFilePaths(postsDirectory, ".mdx");
 
   const files = [...mdFiles, ...mdxFiles];
-
 
   const allPostsData: PostMetaDataType[] = files.map((file) => {
     const fullPath = path.join(postsDirectory, file);
@@ -99,13 +98,16 @@ export function getAllPostPaths() {
 
   return files.map((file) => {
     const arrayPath = file.split("/");
-    arrayPath[arrayPath.length - 1] = arrayPath[arrayPath.length - 1].replace(/\.md$|\.mdx$/, "");
+    arrayPath[arrayPath.length - 1] = arrayPath[arrayPath.length - 1].replace(
+      /\.md$|\.mdx$/,
+      ""
+    );
     return {
       params: {
         path: arrayPath,
       },
-    }
-  })
+    };
+  });
 }
 
 export const getAllPostPathStrings = () => {
@@ -118,33 +120,31 @@ export const getAllPostPathStrings = () => {
     // const arrayPath = file.split("/");
     const path = file.replace(/\.md$|\.mdx$/, "");
     return path;
-  })
-}
+  });
+};
 
 const getFileInfo = (id: string, category: string[]): FileInfo => {
   const fullMdPath = path.join(postsDirectory, ...category, `${id}.md`);
   const mdExist = fs.existsSync(fullMdPath);
 
-  const existFilePath = mdExist 
-    ? fullMdPath 
+  const existFilePath = mdExist
+    ? fullMdPath
     : path.join(postsDirectory, ...category, `${id}.mdx`);
-  const fileContents = fs.readFileSync(existFilePath, 'utf8');
+  const fileContents = fs.readFileSync(existFilePath, "utf8");
 
   const matterResult = matter(fileContents);
-  
+
   return {
     isMdFile: mdExist,
     matterResult,
-  }
-}
+  };
+};
 
 export const getPostData = async (
-  id: string, 
+  id: string,
   category: string[]
 ): Promise<PostData> => {
-
   const { matterResult } = getFileInfo(id, category);
-
 
   const processedContent = await unified()
     .use(remarkParse)
@@ -153,7 +153,7 @@ export const getPostData = async (
     .use(rehypePrettyCode, {
       grid: true,
       defaultLang: "js",
-      theme: "dark-plus"
+      theme: "dark-plus",
     })
     .use(rehypeStringify)
     .process(matterResult.content);
@@ -164,4 +164,4 @@ export const getPostData = async (
     contentHtml,
     ...matterResult.data,
   };
-}
+};

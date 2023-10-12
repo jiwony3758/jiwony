@@ -1,5 +1,3 @@
-
-
 article {
   margin: 0 auto;
   max-width: 880px;
@@ -18,8 +16,6 @@ article {
   letter-spacing: -0.05rem;
   margin: 1rem 0;
 }
-
-
 
 /* content style */
 
@@ -41,12 +37,9 @@ table th {
 }
 
 table td {
-  border: 0.5px solid #AAAAAA;
+  border: 0.5px solid #aaaaaa;
   padding: 10px;
 }
-
-
-
 
 .content h2 {
   border-bottom: solid 1px;
@@ -61,17 +54,25 @@ table td {
 
 .content a {
   color: var(--text-link);
-  background-image: 
-    linear-gradient(var(--background-rgb), var(--background-rgb)), 
+  background-image: linear-gradient(
+      var(--background-rgb),
+      var(--background-rgb)
+    ),
     linear-gradient(var(--text-link), var(--text-link));
-  background-size: 100% 2px, 100% 2px;
-  background-position: 100% 100%, 0 100%;
+  background-size:
+    100% 2px,
+    100% 2px;
+  background-position:
+    100% 100%,
+    0 100%;
   background-repeat: no-repeat;
   transition: background-size 300ms ease-in-out;
 }
 
 .content a:hover {
-  background-size: 0 2px, 100% 2px;
+  background-size:
+    0 2px,
+    100% 2px;
 }
 
 /* code block style*/
@@ -95,11 +96,11 @@ pre {
 code {
   counter-reset: line;
 }
- 
+
 code > [data-line]::before {
   counter-increment: line;
   content: counter(line);
- 
+
   /* Other styling */
   display: inline-block;
   width: 1rem;
@@ -107,11 +108,11 @@ code > [data-line]::before {
   text-align: right;
   color: gray;
 }
- 
-code[data-line-numbers-max-digits='2'] > [data-line]::before {
+
+code[data-line-numbers-max-digits="2"] > [data-line]::before {
   width: 2rem;
 }
- 
-code[data-line-numbers-max-digits='3'] > [data-line]::before {
+
+code[data-line-numbers-max-digits="3"] > [data-line]::before {
   width: 3rem;
 }

@@ -5,7 +5,10 @@ import { exit } from "process";
 const fileName = process.argv[3];
 const category = process.argv[2] ? process.argv[2] : "";
 
-const directoryPath = path.join(process.cwd(), `/src/content/posts/${category}/`);
+const directoryPath = path.join(
+  process.cwd(),
+  `/src/content/posts/${category}/`
+);
 const filePath = path.join(directoryPath, fileName);
 
 const content = `---
@@ -15,27 +18,26 @@ category: ""
 date: "2023-10-03"
 tags: ""
 ---
-`
+`;
 
-if(category !== "") {
+if (category !== "") {
   const isExistDirectory = fs.existsSync(directoryPath);
-  if(!isExistDirectory) fs.mkdirSync(directoryPath);
+  if (!isExistDirectory) fs.mkdirSync(directoryPath);
 }
 
-try{
+try {
   const isExistFile = fs.existsSync(filePath);
-  if(isExistFile) throw new Error("Already exist file...");
-  else{
+  if (isExistFile) throw new Error("Already exist file...");
+  else {
     fs.writeFileSync(filePath, content);
 
     console.info(`Success make Contents!!`);
     console.info(`Directory: ${category}`);
     console.info(`File: ${fileName}`);
   }
-}catch(e){
+} catch (e) {
   console.log(filePath);
   console.info(`Failed make Contents!!`);
   console.info(e);
   exit();
 }
-

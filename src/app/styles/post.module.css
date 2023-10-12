@@ -1,43 +1,43 @@
 .list {
-	display: flex;
-	max-width: 840px;
-	flex-direction: column;
-	gap: 16px;
-	margin: 0 auto;
-	padding: 0 40px;
+  display: flex;
+  max-width: 840px;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0 auto;
+  padding: 0 40px;
 }
 
 .item {
-	width: auto;
-	transition: all 100ms ease-in;
+  width: auto;
+  transition: all 100ms ease-in;
 }
 
 .item a {
-	display: inline-block;
-	padding: 20px;
-	width: 100%;
+  display: inline-block;
+  padding: 20px;
+  width: 100%;
 }
 
-.item:hover{
-	transform: scale(1.01);
+.item:hover {
+  transform: scale(1.01);
 }
 
 .item-title {
-	display: block;
-	margin: 0;
-	font-weight: 700;
-	margin-top: 2px;
+  display: block;
+  margin: 0;
+  font-weight: 700;
+  margin-top: 2px;
 }
 
 .item-header {
-	display: flex;
-	justify-content: space-between;
-	gap: 8px;
-	margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
 }
 
 .item-description {
-	display: block;
-	margin-top: 8px;
-	color: var(--text-description);
+  display: block;
+  margin-top: 8px;
+  color: var(--text-description);
 }

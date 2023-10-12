@@ -19,7 +19,7 @@
   --text-primary: #3e00fb;
   --text-description: #696969;
   --text-description2: #acacac;
-  --text-link: #246cfb;  
+  --text-link: #246cfb;
 
   --border-primary: #cecece;
 }
@@ -113,7 +113,7 @@ ul {
 
 .date {
   font-size: 0.8rem;
-	color: var(--text-description2);
+  color: var(--text-description2);
 }
 
 @media (prefers-color-scheme: dark) {

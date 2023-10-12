@@ -1,11 +1,11 @@
 .list {
-	display: flex;
-	gap: 8px;
-	color: var(--text-primary);
-	font-weight: bold;
-	flex-wrap: wrap;
+  display: flex;
+  gap: 8px;
+  color: var(--text-primary);
+  font-weight: bold;
+  flex-wrap: wrap;
 }
 
 .item {
-	white-space: nowrap;
+  white-space: nowrap;
 }

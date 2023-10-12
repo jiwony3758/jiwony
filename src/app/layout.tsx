@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import Link from "next/link";
 
-const inter = Noto_Sans({ 
-  weight: '400',
-  subsets: ['latin']
+const inter = Noto_Sans({
+  weight: "400",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -33,9 +33,7 @@ export default function RootLayout({
             </Link>
           </nav>
         </header>
-        <main>
-        {children}
-        </main>
+        <main>{children}</main>
       </body>
     </html>
   );
