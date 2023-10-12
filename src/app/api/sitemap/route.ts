@@ -1,6 +1,7 @@
 import { getAllPostPathStrings } from "@/libraries/post";
+import metadata from "../../../../config/metadata";
 
-const url = "https://jiwony.dev";
+const siteUrl = metadata.metadataBase;
 
 export function GET() {
   const date = new Date();
@@ -14,7 +15,7 @@ export function GET() {
     .map((pathname) => {
       return `
       <url>
-        <loc>${url}/posts/${pathname}</loc>
+        <loc>${siteUrl}/posts/${pathname}</loc>
         <lastmod>${year}-${month}-${day}</lastmod>
       </url>
     `;

@@ -1,6 +1,6 @@
 import metadata from "../../../../config/metadata";
 
-const siteUrl = metadata.siteUrl;
+const siteUrl = metadata.metadataBase;
 
 export function GET() {
   return new Response(
