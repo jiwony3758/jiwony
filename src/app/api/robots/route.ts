@@ -7,7 +7,7 @@ export function GET() {
     `User-agent: *
 Allow: /
 Disallow: /api
-Sitemap: ${siteUrl}/sitemap.xml
+Sitemap: ${siteUrl}sitemap.xml
   `,
     {
       status: 200,

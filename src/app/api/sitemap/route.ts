@@ -15,7 +15,7 @@ export function GET() {
     .map((pathname) => {
       return `
       <url>
-        <loc>${siteUrl}/posts/${pathname}</loc>
+        <loc>${siteUrl}posts/${pathname}</loc>
         <lastmod>${year}-${month}-${day}</lastmod>
       </url>
     `;
