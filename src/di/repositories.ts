@@ -2,7 +2,7 @@ import { PostRepository } from "@/adapters/repositories/Post"
 import path from "path"
 import { IInfrastructures } from "./infrastructures";
 
-const postDirectory = path.join(process.cwd(), "src/content/posts");
+const postDirectory = path.join(process.cwd(), "src/contents/posts");
 
 export interface IRepositories {
   postRepository: PostRepository
