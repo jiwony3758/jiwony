@@ -81,13 +81,14 @@ export class FileHandler implements IFileHandler {
       for await (const file of files) {
         const filePath = path.join(directory, file);
         const fileStat = await fs.stat(filePath);
-  
+
         if(fileStat.isDirectory()) {
           await searchFile(filePath);
         }else if (file.endsWith(fileNameExtension)){
-          const relativePath = path.relative(directory, file);
+
+          const relativePath = path.relative(directory, filePath);
           resultFiles.push({
-            rootPath: file,
+            rootPath: filePath,
             relativePath,
           });
         }
