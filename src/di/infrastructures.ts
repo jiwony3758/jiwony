@@ -1,5 +1,4 @@
-import { FileHandler } from "@/adapters/infrastructures/FileHandler"
-
+import { FileHandler } from "@/adapters/infrastructures/FileHandler";
 
 export interface IInfrastructures {
   fileHandler: FileHandler;
@@ -7,4 +6,4 @@ export interface IInfrastructures {
 
 export default (): IInfrastructures => ({
   fileHandler: new FileHandler(),
-})
+});

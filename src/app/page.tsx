@@ -8,21 +8,13 @@ import { PostVM } from "@/vm/Post";
 
 export default async function Home() {
   const posts: IPostEntity[] = await di.post.getAllSortedPostData();
-  const postVMList = posts.map(post => new PostVM(post));
-
-  const convertCategoryPath = (category: string) => {
-    return category.replaceAll(",", "/") + "/";
-  };
+  const postVMList = posts.map((post) => new PostVM(post));
 
   return (
     <ul className={postStyles["list"]}>
-      {postVMList.map(({ id, title, description, date, category = "", tags }) => (
+      {postVMList.map(({ id, title, description, date, category, tags }) => (
         <li className={postStyles["item"]} key={id}>
-          <Link
-            href={`/posts/${
-              category.length > 0 ? convertCategoryPath(category) : ""
-            }${id}`}
-          >
+          <Link href={`/posts/${category}${id}`}>
             <p className={postStyles["item-header"]}>
               {tags && tags.length > 0 ? (
                 <span className={tagStyles["list"]}>
