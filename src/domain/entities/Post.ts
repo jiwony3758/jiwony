@@ -18,28 +18,23 @@ export interface IPostEntity {
   content: string;
 }
 
-export class Post implements IPostEntity{
+export class Post implements IPostEntity {
   _id: string;
   _metadata: PostMetadata;
   _content: string;
 
   constructor(params: IPostParams) {
-    const {
-      path,
-      metadata,
-      content,
-    } = params;
+    const { path, metadata, content } = params;
     const arrayPath = path.split("/");
     this._id = arrayPath[arrayPath.length - 1].replaceAll(/\.md$|\.mdx$/, "");
-    this._metadata = Object.assign({ metadata })
+    this._metadata = Object.assign({ metadata });
     this._content = content;
   }
 
-  
-  get id() : string {
+  get id(): string {
     return this._id;
   }
-  
+
   get metadata(): PostMetadata {
     return this._metadata;
   }

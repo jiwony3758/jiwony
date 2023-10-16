@@ -10,7 +10,7 @@ export interface IPostVM {
   content: string;
 }
 
-export class PostVM implements IPostVM{
+export class PostVM implements IPostVM {
   private readonly _id: string;
   private readonly _title: string;
   private readonly _description: string;
@@ -19,43 +19,47 @@ export class PostVM implements IPostVM{
   private readonly _tags: string[];
   private readonly _content: string;
 
-  constructor(params: IPostEntity){
+  constructor(params: IPostEntity) {
     const { metadata } = params;
     this._id = params.id;
     this._title = metadata.title;
     this._description = metadata.description;
     this._date = metadata.date;
-    this._category = metadata.category;
+    if (metadata?.category) {
+      this._category = metadata.category.replaceAll(",", "/") + "/";
+    } else {
+      this._category = "";
+    }
+
     this._tags = metadata.tags.split(",");
     this._content = params.content;
   }
 
-  
-  get id() : string {
-    return this._id
-  }
-  
-  get title() : string {
-    return this._title
+  get id(): string {
+    return this._id;
   }
 
-  get description() : string {
-    return this._description
+  get title(): string {
+    return this._title;
   }
 
-  get date() : string {
-    return this._date
+  get description(): string {
+    return this._description;
   }
 
-  get category() : string {
-    return this._category
+  get date(): string {
+    return this._date;
   }
 
-  get tags() : string[] {
-    return this._tags
+  get category(): string {
+    return this._category;
   }
 
-  get content() : string {
-    return this._content
+  get tags(): string[] {
+    return this._tags;
+  }
+
+  get content(): string {
+    return this._content;
   }
 }
