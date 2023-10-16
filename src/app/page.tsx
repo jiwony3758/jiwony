@@ -1,12 +1,14 @@
-import { getSortedPostsData } from "@/libraries/post";
-import { PostMetaDataType } from "@/types/post";
 import Link from "next/link";
 import DateView from "./components/DateView";
 import postStyles from "@/app/styles/post.module.css";
 import tagStyles from "@/app/styles/tag.module.css";
+import { IPostEntity } from "@/domain/entities/Post";
+import di from "@/di";
+import { PostVM } from "@/vm/Post";
 
-export default function Home() {
-  const posts: PostMetaDataType[] = getSortedPostsData();
+export default async function Home() {
+  const posts: IPostEntity[] = await di.post.getAllSortedPostData();
+  const postVMList = posts.map(post => new PostVM(post));
 
   const convertCategoryPath = (category: string) => {
     return category.replaceAll(",", "/") + "/";
@@ -14,7 +16,7 @@ export default function Home() {
 
   return (
     <ul className={postStyles["list"]}>
-      {posts.map(({ id, title, description, date, category = "", tags }) => (
+      {postVMList.map(({ id, title, description, date, category = "", tags }) => (
         <li className={postStyles["item"]} key={id}>
           <Link
             href={`/posts/${
