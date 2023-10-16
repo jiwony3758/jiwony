@@ -1,21 +1,21 @@
-import { getAllPostPathStrings } from "@/libraries/post";
 import metadata from "../../../../config/metadata";
+import di from "@/di";
 
 const siteUrl = metadata.metadataBase;
 
-export function GET() {
+export async function GET() {
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
 
-  const allPostPaths = getAllPostPathStrings();
+  const allPostPaths = await di.post.getPostFiles();
 
   const postsSitemap = allPostPaths
-    .map((pathname) => {
+    .map(({ relativePath }) => {
       return `
       <url>
-        <loc>${siteUrl}posts/${pathname}</loc>
+        <loc>${siteUrl}posts/${relativePath}</loc>
         <lastmod>${year}-${month}-${day}</lastmod>
       </url>
     `;

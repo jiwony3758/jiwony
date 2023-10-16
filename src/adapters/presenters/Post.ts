@@ -1,11 +1,12 @@
 import { IPostEntity } from "@/domain/entities/Post";
 import { PostUseCase } from "@/domain/useCases/Post";
+import { IFilePath } from "../infrastructures/FileHandler";
 
 export class PostPresenter {
-  constructor(private readonly postUsecase: PostUseCase) {}
+  constructor(private readonly postUseCase: PostUseCase) {}
 
   async getAllSortedPostData(): Promise<IPostEntity[]> {
-    const allPostData = await this.postUsecase.getAllPostData();
+    const allPostData = await this.postUseCase.getAllPostData();
     return allPostData.sort((a, b) => {
       if (a.metadata.date < b.metadata.date) {
         return 1;
@@ -26,11 +27,11 @@ export class PostPresenter {
       category.push(...routingPath.slice(0, routingPath.length - 1));
     }
 
-    return await this.postUsecase.getPostDataByIdAndCategory(id, category);
+    return await this.postUseCase.getPostDataByIdAndCategory(id, category);
   }
 
   async getPostRoutingPath(): Promise<{ params: { routingPath: string[] } }[]> {
-    const files = await this.postUsecase.getPostFiles();
+    const files = await this.postUseCase.getPostFiles();
     return files.map((file) => {
       const arrayPath = file.relativePath.split("/");
       arrayPath[arrayPath.length - 1] = arrayPath[arrayPath.length - 1].replace(
@@ -43,5 +44,9 @@ export class PostPresenter {
         },
       };
     });
+  }
+
+  async getPostFiles(): Promise<IFilePath[]> {
+    return await this.postUseCase.getPostFiles();
   }
 }
