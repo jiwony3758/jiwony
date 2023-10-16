@@ -7,7 +7,7 @@ const category = process.argv[2] ? process.argv[2] : "";
 
 const directoryPath = path.join(
   process.cwd(),
-  `/src/content/posts/${category}/`
+  `/src/contents/posts/${category}/`
 );
 const filePath = path.join(directoryPath, fileName);
 
