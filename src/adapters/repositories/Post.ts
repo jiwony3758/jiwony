@@ -51,7 +51,6 @@ export class PostRepository implements IPostRepository {
     const matterResult = matter(postData);
 
     const { data: postMetadata } = matterResult;
-    Object.assign(postMetadata, { tags: postMetadata.tags.split(",") });
     return {
       ...postMetadata as PostMetadata
     }
