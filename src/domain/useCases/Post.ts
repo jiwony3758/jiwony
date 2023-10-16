@@ -28,4 +28,19 @@ export class PostUseCase {
       content
     }
   }
+
+  async getAllSortedPostData(): Promise<IPostEntity[]> {
+    const files = await this.postRepository.getPostFiles(); 
+    const allPostData = await Promise.all(files.map(async file => {
+      return this.getPostData(file.rootPath);
+    }));
+
+    return allPostData.sort((a, b) => {
+      if(a.metadata.date < b.metadata.date) {
+        return 1;
+      }else {
+        return -1;
+      }
+    })
+  }
 }
