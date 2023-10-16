@@ -15,12 +15,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-// export const metadata: Metadata = {
-//   title: "Jiwony",
-//   description: "Jiwony Web Site",
-//   authors: metadata
-// };
-
 export default function RootLayout({
   children,
 }: {
