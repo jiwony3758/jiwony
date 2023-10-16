@@ -1,3 +1,4 @@
+import di from "@/di";
 import { Metadata } from "next";
 
 type MetadataProps = {
@@ -8,10 +9,12 @@ export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
   const { path } = params;
-  const id = path[path.length - 1];
+  const { metadata } = await di.post.getPostDataByRoutingPath(path);
 
   return {
-    title: decodeURI(id),
+    title: metadata.title,
+    description: metadata.description,
+    keywords: metadata.tags.split(","),
   };
 }
 
