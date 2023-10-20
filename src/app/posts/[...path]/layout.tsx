@@ -15,6 +15,11 @@ export async function generateMetadata({
     title: metadata.title,
     description: metadata.description,
     keywords: metadata.tags.split(","),
+    openGraph: {
+      title: metadata.title,
+      description: metadata.description,
+      type: "website",
+    }
   };
 }
 
