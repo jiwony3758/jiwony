@@ -26,7 +26,6 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.0.0",
     "shiki": "^0.14.4",
-    "styled-components": "^6.0.8",
     "ts-node": "^10.9.1",
     "typescript": "5.2.2",
     "unified": "^11.0.3"
