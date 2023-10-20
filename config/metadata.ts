@@ -15,11 +15,17 @@ const metadata: Metadata = {
   publisher: DEVELOPER,
   robots: "index, follow",
   icons: [{
+    url: "/favicon.ico",
+  }, {
     url: "/LEEJIWON-16.png",
     sizes: "16px"
   }, {
     url: "/LEEJIWON-32.png",
     sizes: "32px"
+  }, {
+    rel: "apple-touch-icon",
+    url: "/LEEJIWON-76.png",
+    sizes: "76px",
   }],
   openGraph: {
     title: TITLE,
