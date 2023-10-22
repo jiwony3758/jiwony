@@ -11,7 +11,7 @@ export interface IFilePath {
   /**
    * 상대경로
    */
-  relativePath: string;
+  relativePath?: string | undefined;
 }
 
 export interface IFileInfo {
@@ -47,8 +47,38 @@ export interface IFileHandler {
    * @return refDirectory 하위의 있는 파일들을 절대 경로, 상대 경로 모두 반환.
    */
   findFiles(directory: string, fileNameExtension: string): Promise<IFilePath[]>;
+
+  /**
+   * 파일 존재 여부 확인
+   * @param paramPath 파일 경로
+   *
+   * @return true | false
+   */
   exists(paramPath: string): boolean;
+
+  /**
+   * string 형태로 읽은 파일을 gray-matter 라이브러리로 front matter 형태로 변환.
+   * @param data string 형태의 읽은 파일 결과
+   *
+   * @return {
+   *  data: { [key: string]: any }
+   *  content: string
+   *  excerpt?: string
+   *  orig: Buffer | I
+   *  language: string
+   *  matter: string
+   *  stringify(lang: string): string
+   * }
+   */
   convertFrontMatterToObject(data: string): matter.GrayMatterFile<string>;
+
+  /**
+   * 파일 정보 가져오기
+   * @param rootPath
+   * @return {IFileInfo}
+   */
+  getFileInfo(rootPath: string): IFileInfo;
+
 }
 
 export class FileHandler implements IFileHandler {
@@ -109,5 +139,19 @@ export class FileHandler implements IFileHandler {
     return {
       ...matterResult,
     };
+  }
+
+  getFileInfo(rootPath: string): IFileInfo {
+    const fileInfo: IFileInfo = {
+      fileExtension: "",
+      filePath: {
+        rootPath: "",
+        relativePath: undefined,
+      },
+    };
+    const pathArray = rootPath.split("/");
+    fileInfo.fileExtension = pathArray[pathArray.length - 1].split(".")[1];
+    fileInfo.filePath.rootPath = rootPath;
+    return fileInfo;
   }
 }
