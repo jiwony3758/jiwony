@@ -13,9 +13,10 @@ export async function GET() {
 
   const postsSitemap = allPostPaths
     .map(({ relativePath }) => {
+      const withoutExtensionRelativePath = relativePath.split(".")[0];
       return `
       <url>
-        <loc>${siteUrl}posts/${relativePath}</loc>
+        <loc>${siteUrl}posts/${withoutExtensionRelativePath}</loc>
         <lastmod>${year}-${month}-${day}</lastmod>
       </url>
     `;
