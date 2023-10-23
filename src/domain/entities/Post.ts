@@ -1,3 +1,13 @@
+export type ContentData = {
+  mdxSource?: string;
+  htmlContent?: string;
+}
+
+export type Content = (
+  { mdxSource: string } | 
+  { htmlContent: string }
+) & ContentData;
+
 export interface PostMetadata {
   title: string;
   description: string;
@@ -9,19 +19,19 @@ export interface PostMetadata {
 export interface IPostParams {
   path: string;
   metadata: PostMetadata;
-  content: string;
+  content: Content;
 }
 
 export interface IPostEntity {
   id: string;
   metadata: PostMetadata;
-  content: string;
+  content: Content;
 }
 
 export class Post implements IPostEntity {
   _id: string;
   _metadata: PostMetadata;
-  _content: string;
+  _content: Content;
 
   constructor(params: IPostParams) {
     const { path, metadata, content } = params;
@@ -39,7 +49,7 @@ export class Post implements IPostEntity {
     return this._metadata;
   }
 
-  get content(): string {
+  get content(): Content {
     return this._content;
   }
 }

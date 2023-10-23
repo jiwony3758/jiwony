@@ -1,11 +1,11 @@
 import { IPostEntity } from "../entities/Post";
-import { IPostRepository } from "./repository-interfaces/Post";
-import { IFilePath } from "@/adapters/infrastructures/FileHandler";
+import { IPostPath, IPostRepository } from "./repository-interfaces/Post";
+
 
 export class PostUseCase {
   constructor(private readonly postRepository: IPostRepository) {}
 
-  async getPostFiles(): Promise<IFilePath[]> {
+  async getPostFiles(): Promise<IPostPath[]> {
     return await this.postRepository.getPostFiles();
   }
 
@@ -35,7 +35,7 @@ export class PostUseCase {
     category: string[]
   ): Promise<IPostEntity> {
     const {
-      filePath: { rootPath },
+      path: { rootPath },
     } = this.postRepository.getPostFileInfo(id, category);
 
     const promiseMetadata = this.postRepository.getPostMetadata(rootPath);
