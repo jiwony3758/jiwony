@@ -1,6 +1,6 @@
 import { IPostEntity } from "@/domain/entities/Post";
 import { PostUseCase } from "@/domain/useCases/Post";
-import { IFilePath } from "../infrastructures/FileHandler";
+import { IPostPath } from "@/domain/useCases/repository-interfaces/Post";
 
 export class PostPresenter {
   constructor(private readonly postUseCase: PostUseCase) {}
@@ -46,7 +46,7 @@ export class PostPresenter {
     });
   }
 
-  async getPostFiles(): Promise<IFilePath[]> {
+  async getPostFiles(): Promise<IPostPath[]> {
     return await this.postUseCase.getPostFiles();
   }
 }
