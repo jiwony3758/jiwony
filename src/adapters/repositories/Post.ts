@@ -1,10 +1,8 @@
-import { IPostRepository } from "@/domain/useCases/repository-interfaces/Post";
+import { IPostFileInfo, IPostPath, IPostRepository } from "@/domain/useCases/repository-interfaces/Post";
 import {
   IFileHandler,
-  IFileInfo,
-  IFilePath,
 } from "../infrastructures/FileHandler";
-import { PostMetadata } from "@/domain/entities/Post";
+import { Content, PostMetadata } from "@/domain/entities/Post";
 import matter from "gray-matter";
 import { unified } from "unified";
 import remarkParse from "remark-parse";
@@ -20,12 +18,15 @@ export class PostRepository implements IPostRepository {
     readonly fileHandler: IFileHandler
   ) {}
 
-  async getPostFiles(): Promise<IFilePath[]> {
+  async getPostFiles(): Promise<IPostPath[]> {
     const mdFiles = await this.fileHandler.findFiles(this.directory, "md");
     const mdxFiles = await this.fileHandler.findFiles(this.directory, "mdx");
-    const files = [...mdFiles, ...mdxFiles];
+    const rootPathFiles = [...mdFiles, ...mdxFiles];
 
-    return files;
+    return rootPathFiles.map( rootPath => ({
+      rootPath,
+      relativePath: path.relative(this.directory, rootPath),
+    }));
   }
 
   async getPostIds(): Promise<string[]> {
@@ -43,10 +44,10 @@ export class PostRepository implements IPostRepository {
     );
   }
 
-  getPostFileInfo(id: string, category: string[]): IFileInfo {
-    const result: IFileInfo = {
-      fileExtension: "md",
-      filePath: {
+  getPostFileInfo(id: string, category: string[]): IPostFileInfo {
+    const result: IPostFileInfo = {
+      extension: "md",  
+      path: {
         rootPath: "",
         relativePath: "",
       },
@@ -54,16 +55,16 @@ export class PostRepository implements IPostRepository {
     const fullMdFilePath = path.join(this.directory, ...category, `${id}.md`);
     const mdExist = this.fileHandler.exists(fullMdFilePath);
     if (mdExist) {
-      result.filePath.rootPath = fullMdFilePath;
-      result.filePath.relativePath = path.join(...category, `${id}.md`);
+      result.path.rootPath = fullMdFilePath;
+      result.path.relativePath = path.join(...category, fullMdFilePath);
     } else {
-      result.fileExtension = "mdx";
-      result.filePath.rootPath = path.join(
+      result.extension = "mdx";
+      result.path.rootPath = path.join(
         this.directory,
         ...category,
         `${id}.mdx`
       );
-      result.filePath.relativePath = path.join(...category, `${id}.mdx`);
+      result.path.relativePath = path.join(...category, `${id}.mdx`);
     }
     return result;
   }
@@ -82,22 +83,24 @@ export class PostRepository implements IPostRepository {
       encoding: "utf-8",
     });
     const matterResult = matter(postData);
-
     const { data: postMetadata } = matterResult;
     return {
       ...(postMetadata as PostMetadata),
     };
   }
 
-  async getPostContent(rootPath: string): Promise<string> {
+
+
+  async getPostContent(rootPath: string): Promise<Content> {
     const fileData = await this.fileHandler.readFile(rootPath, {
       encoding: "utf-8",
     });
     const { content } = this.fileHandler.convertFrontMatterToObject(
       fileData as string
     );
-
-    const processedContent = await unified()
+    const fileInfo = this.fileHandler.getFileInfo(rootPath);
+    if(fileInfo.extension === "md") {
+      const processedContent = await unified()
       .use(remarkParse)
       .use(remarkGfm)
       .use(remarkRehype)
@@ -109,7 +112,14 @@ export class PostRepository implements IPostRepository {
       .use(rehypeStringify)
       .process(content);
 
-    const contentHtml = processedContent.toString();
-    return contentHtml;
+      const contentHtml = processedContent.toString();
+      return {
+        htmlContent: contentHtml,
+      }
+    }else {
+      return {
+        mdxSource: content,
+      }
+    }
   }
 }

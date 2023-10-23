@@ -3,20 +3,9 @@ import { ObjectEncodingOptions, existsSync } from "fs";
 import fs from "fs/promises";
 import matter from "gray-matter";
 
-export interface IFilePath {
-  /**
-   * 절대경로
-   */
-  rootPath: string;
-  /**
-   * 상대경로
-   */
-  relativePath?: string | undefined;
-}
-
 export interface IFileInfo {
-  fileExtension: string;
-  filePath: IFilePath;
+  extension: string;
+  rootPath: string;
 }
 
 export interface IFileHandler {
@@ -46,7 +35,7 @@ export interface IFileHandler {
    *
    * @return refDirectory 하위의 있는 파일들을 절대 경로, 상대 경로 모두 반환.
    */
-  findFiles(directory: string, fileNameExtension: string): Promise<IFilePath[]>;
+  findFiles(directory: string, fileNameExtension: string): Promise<string[]>;
 
   /**
    * 파일 존재 여부 확인
@@ -106,7 +95,7 @@ export class FileHandler implements IFileHandler {
   }
 
   async findFiles(refDirectory: string, fileNameExtension: string) {
-    const resultFiles: IFilePath[] = [];
+    const resultFiles: string[] = [];
 
     const searchFile = async (directory: string): Promise<void> => {
       const files = await this.readDir(directory);
@@ -118,11 +107,7 @@ export class FileHandler implements IFileHandler {
         if (fileStat.isDirectory()) {
           await searchFile(filePath);
         } else if (file.endsWith(fileNameExtension)) {
-          const relativePath = path.relative(refDirectory, filePath);
-          resultFiles.push({
-            rootPath: filePath,
-            relativePath,
-          });
+          resultFiles.push(filePath);
         }
       }
     };
@@ -143,15 +128,12 @@ export class FileHandler implements IFileHandler {
 
   getFileInfo(rootPath: string): IFileInfo {
     const fileInfo: IFileInfo = {
-      fileExtension: "",
-      filePath: {
-        rootPath: "",
-        relativePath: undefined,
-      },
+      extension: "",
+      rootPath: "",
     };
     const pathArray = rootPath.split("/");
-    fileInfo.fileExtension = pathArray[pathArray.length - 1].split(".")[1];
-    fileInfo.filePath.rootPath = rootPath;
+    fileInfo.extension = pathArray[pathArray.length - 1].split(".")[1];
+    fileInfo.rootPath = rootPath;
     return fileInfo;
   }
 }
