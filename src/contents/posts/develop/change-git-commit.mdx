@@ -6,29 +6,30 @@ date: "2023-10-17"
 tags: "github,git,rebase,깃허브 잔디,깃허브"
 ---
 
-_깃허브 잔디가 생성되지 않는다..._
-
-&nbsp;
+_깃허브 잔디가 생성되지 않는다..._<br/>
 로컬 git config 설정이 github 계정과 달라서 그런 것이었다. 바로 찾아보고 깃 커밋 내용을 수정하려했는데 커밋이 50개가 넘었다.
-생각보다 많았으나 정말 단순 반복이라 금방 끝났다.
-
-&nbsp;
+생각보다 많았으나 정말 단순 반복이라 금방 끝났다.<br/>
 아직 진행하지 못 한 레포가 하나 남아서 그걸 기반으로 포스팅을 해보려 한다.
 
 ## github 계정과 로컬 git config 확인
 
-```sh
+<CodeBlock language="bash">
+{`
 git config --list
 
 # user.email=jiwony3758@gmail.com
 # user.name=jiwony3758
-```
+`}
+</CodeBlock>
 위와 같이 user.name과 user.email이 존재하는지 확인한다.
 존재하지 않으면
-```sh
+
+<CodeBlock language="bash">
+{`
 git config user.name "jiwony3758"
 git config user.email "jiwony3758@gmail.com"
-```
+`}
+</CodeBlock>
 레포지토리 디렉토리에서 위와 같이 입력해 설정해준다.
 글로벌로 설정하려면 --global 옵션을 추가한다.
 
@@ -37,48 +38,45 @@ git config user.email "jiwony3758@gmail.com"
 
 
 git rebase 명령에 대한 설명은 여기서 하지 않을 것이다.
-
-```sh
-git rebase -i --root
-```
+<CodeBlock language="bash">
+{`git rebase -i --root`}
+</CodeBlock>
 위의 명령어를 입력하면 아래와 같은 파일이 편집기로 열린다.
 
 ![rebase 결과](/contents/posts/rebase-1.png)
 
 이 파일은 첫 커밋부터 현재 커밋까지의 리스트가 담긴 rebase 파일이다.
-변경할 커밋의 pick을 edit로 변경해주고 :wq로 저장하고 닫으면 변경할 첫 번째 커밋으로 돌아간다.
-
+변경할 커밋의 pick을 edit로 변경해주고 :wq로 저장하고 닫으면 변경할 첫 번째 커밋으로 돌아간다.<br/>
 이제 커밋을 변경해주면 된다.
 ### git commit --amend --author="AuthorName\<Email\>"
 
 작성자부터 변경해보겠다.
 나는 AuthorName에 jiwony3758, email에 jiwony3758@gmail.com"을 대입해서 커밋을 수정해줬다.
 
-```sh
+<CodeBlock language="bash">
+{`
 git commit --amend --author="jiwony3758<jiwony3758@gmail.com>" 
-```
+`}
+</CodeBlock>
 
 ![AuthorName 수정 후 열린 파일](/contents/posts/rebase-2.png)
 
 ### GIT_COMMITTER_DATE="Mon Sep 4 17:46:03 2023 +0900" git commit --amend --date="Mon Sep 4 17:46:03 2023 +0900"
-```sh
-git log --pretty=fuller 
-```
+<CodeBlock language="bash">
+{`git log --pretty=fuller `}
+</CodeBlock>
 
 위의 명령을 실행하면 아래와 같이 CommitDate가 나온다. 실제 커밋 날짜다
 
 ![commit Date](/contents/posts/rebase-3.png)
 
-이미지를 보면 Commit Date가 AuthDate와 같은 날로 되어있는 걸 확인할 수 있다.
-
-커밋을 rebase로 변경할 때 commit date를 변경해주지 않으면 변경한 시점의 date로 commit date가 적용되어버린다.
-
-그러면 최초 커밋 날짜에 잔디가 생기지 않게 된다.
-
+이미지를 보면 Commit Date가 AuthDate와 같은 날로 되어있는 걸 확인할 수 있다.<br/>
+커밋을 rebase로 변경할 때 commit date를 변경해주지 않으면 변경한 시점의 date로 commit date가 적용되어버린다.<br/>
+그러면 최초 커밋 날짜에 잔디가 생기지 않게 된다.<br/>
 그래서 commit date도 적용해준다.
-```sh
-GIT_COMMITTER_DATE="Mon Sep 4 17:46:03 2023 +0900" git commit --amend --date="Mon Sep 4 17:46:03 2023 +0900"
-```
+<CodeBlock language="bash">
+{`GIT_COMMITTER_DATE="Mon Sep 4 17:46:03 2023 +0900" git commit --amend --date="Mon Sep 4 17:46:03 2023 +0900"`}
+</CodeBlock>
 
 GIT_COMMITTER_DATE에 위에서 Author 변경해주고 난 결과에 찍힌 Date를 복사해서 넣어준다. 그리고 git commit --amend에서 --date 값에도 똑같이 기입해준다.
 
@@ -92,9 +90,9 @@ GIT_COMMITTER_DATE에 위에서 Author 변경해주고 난 결과에 찍힌 Date
 그런데 열린 파일에서 수정하고 저장하는 작업을 하다가 이건 배보다 배꼽이 더 큰 것 같다는 생각에 커맨드만이라도 빨리 할 수 있게 만들었다.
 
 우선 git rebase -i --root 후 생성된 파일에서 pick을 한 번에 edit로 변경하는 것부터 한다.
-```
-:%s/pick/edit/g
-```
+
+*:%s/pick/edit/g*
+
 
 vi 편집기에서 해당 명령어를 입력하면 모든 pick 문자열을 edit로 변경한다.
 
@@ -102,10 +100,12 @@ vi 편집기에서 해당 명령어를 입력하면 모든 pick 문자열을 edi
 
 그리고 쉘 스크립트를 하나 작성한다
 
-```sh title="../scripts/rebase-date.sh"
+<CodeBlock language="bash" title="../scripts/rebase-date.sh">
+{`
 GIT_COMMITTER_DATE="$1" git commit --amend --date="$1"
 git rebase --continue
-```
+`}
+</CodeBlock>
 
 쉘 언어에서 $1는 첫 번째 파라미터의 값을 의미한다.
 이걸 스크립트를 안 쓸 경우 
@@ -114,7 +114,7 @@ git rebase --continue
 3. 다음 rebase
 
 총 3단계를 거치게 되는데 해당 스크립트를 사용하면 단계를 2단계로 줄여줄 뿐만 아니라 date를 두 번 붙여넣기 해야하는 걸 
-```sh
-sh ../scripts/rebase-date.sh "Mon Sep 4 17:46:03 2023 +0900"
-```
+<CodeBlock language="bash">
+{`sh ../scripts/rebase-date.sh "Mon Sep 4 17:46:03 2023 +0900"`}
+</CodeBlock>
 이 명령을 통해 한 번만 붙여넣으면 된다.
