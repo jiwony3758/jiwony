@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./small.css";
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import Link from "next/link";
