@@ -1,4 +1,4 @@
-import { IPostEntity } from "@/domain/entities/Post";
+import { Content, IPostEntity } from "@/domain/entities/Post";
 
 export interface IPostVM {
   id: string;
@@ -7,7 +7,7 @@ export interface IPostVM {
   date: string;
   category: string;
   tags: string[];
-  content: string;
+  content: Content;
 }
 
 export class PostVM implements IPostVM {
@@ -17,7 +17,7 @@ export class PostVM implements IPostVM {
   private readonly _date: string;
   private readonly _category: string;
   private readonly _tags: string[];
-  private readonly _content: string;
+  private readonly _content: Content;
 
   constructor(params: IPostEntity) {
     const { metadata } = params;
@@ -59,7 +59,7 @@ export class PostVM implements IPostVM {
     return this._tags;
   }
 
-  get content(): string {
+  get content(): Content {
     return this._content;
   }
 }
