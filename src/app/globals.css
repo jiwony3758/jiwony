@@ -1,3 +1,7 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
 @font-face {
   font-family: "PyeongChangPeace-Bold";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2206-02@1.0/PyeongChangPeace-Bold.woff2")
@@ -14,6 +18,8 @@
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --background-rgb: #ffffff;
+  --background-tag-rgb: #eee8ff;
+  --background-tag-hover-rgb: #f8f6ff;
 
   --text-basic: #000000;
   --text-primary: #3e00fb;
@@ -27,6 +33,8 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background-rgb: #25212d;
+    --background-tag-rgb: #35236d;
+    --background-tag-hover-rgb: #2d234c;
 
     --text-basic: #ffffff;
     --text-primary: #a98efc;
@@ -72,7 +80,6 @@ main {
   padding-top: 48px;
   margin-top: 60px;
   min-height: 100vh;
-  overflow: auto;
   width: 100%;
 }
 
