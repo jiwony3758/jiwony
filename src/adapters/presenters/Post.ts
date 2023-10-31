@@ -49,4 +49,11 @@ export class PostPresenter {
   async getPostFiles(): Promise<IPostPath[]> {
     return await this.postUseCase.getPostFiles();
   }
+  
+  async getTags(): Promise<string[]> {
+    const allPostData = await this.postUseCase.getAllPostData();
+    const allTags = allPostData.map(postData => postData.metadata.tags);
+    console.log(allTags);
+    return allTags;
+  }
 }

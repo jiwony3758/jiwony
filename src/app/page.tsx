@@ -1,41 +1,25 @@
-import Link from "next/link";
-import DateView from "./components/DateView";
-import postStyles from "@/app/styles/post.module.css";
-import tagStyles from "@/app/styles/tag.module.css";
 import { IPostEntity } from "@/domain/entities/Post";
 import di from "@/di";
 import { PostVM } from "@/vm/Post";
+import { PostList } from "./components/PostList";
+import { SearchBar } from "./components/SearchBar";
+import TagCollection from "./components/TagCollection";
 
 export default async function Home() {
   const posts: IPostEntity[] = await di.post.getAllSortedPostData();
   const postVMList = posts.map((post) => new PostVM(post));
 
+  const postTags = posts.map(post => post.metadata.tags);
+  const tags = postTags.toString().split(",");
   return (
-    <ul className={postStyles["list"]}>
-      {postVMList.map(({ id, title, description, date, category, tags }) => (
-        <li className={postStyles["item"]} key={id}>
-          <Link href={`/posts/${category}${id}`}>
-            <p className={postStyles["item-header"]}>
-              {tags && tags.length > 0 ? (
-                <span className={tagStyles["list"]}>
-                  {tags.map((tag, index) => (
-                    <span className={tagStyles["item"]} key={index}>
-                      {tag}
-                    </span>
-                  ))}
-                </span>
-              ) : (
-                <></>
-              )}
-              <DateView dateString={date} />
-            </p>
-            <h3 className={postStyles["item-title"]}>{title}</h3>
-            <span className={postStyles["item-description"]}>
-              {description}
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <div className="relative mx-auto max-w-screen-xl px-4 md:flex md:flex-row">
+      <aside className="hidden sticky top-[121px] h-[calc(100vh-121px)] md:flex md:flex-col w-[284px] p-2">
+        <TagCollection tags={tags}/>
+      </aside>
+      <section className="flex flex-col gap-8 px-3">
+        <SearchBar />
+        <PostList posts={postVMList} />
+      </section>
+    </div>
   );
 }
