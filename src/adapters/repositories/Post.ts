@@ -1,125 +1,261 @@
-import { IPostFileInfo, IPostPath, IPostRepository } from "@/domain/useCases/repository-interfaces/Post";
+import { IPostRepository } from "@/domain/useCases/repository-interfaces/Post";
+import { IFileHandler } from "../infrastructures/FileHandler";
+import { IPostProperties } from "@/domain/entities/Post";
+import { NotionClient } from "../infrastructures/NotionClient";
 import {
-  IFileHandler,
-} from "../infrastructures/FileHandler";
-import { Content, PostMetadata } from "@/domain/entities/Post";
-import matter from "gray-matter";
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import remarkGfm from "remark-gfm";
-import remarkRehype from "remark-rehype";
-import rehypePrettyCode from "rehype-pretty-code";
-import rehypeStringify from "rehype-stringify";
-import path from "path";
+  NotionProperty,
+  NotionRichText,
+} from "../infrastructures/types/Notion.type";
+import {
+  ICreatePostDTO,
+  IPostContentByContentIdRequestDTO,
+  IPostContentByPageIdRequestDTO,
+  IPostDTO,
+} from "@/domain/dtos/Post";
 
 export class PostRepository implements IPostRepository {
   constructor(
+    private readonly notionDatabaseId: string,
     private readonly directory: string,
-    readonly fileHandler: IFileHandler
+    private readonly fileHandler: IFileHandler,
+    private readonly notionClient: NotionClient
   ) {}
 
-  async getPostFiles(): Promise<IPostPath[]> {
-    const mdFiles = await this.fileHandler.findFiles(this.directory, "md");
-    const mdxFiles = await this.fileHandler.findFiles(this.directory, "mdx");
-    const rootPathFiles = [...mdFiles, ...mdxFiles];
-
-    return rootPathFiles.map( rootPath => ({
-      rootPath,
-      relativePath: path.relative(this.directory, rootPath),
+  async getPostsProperties(): Promise<IPostProperties[]> {
+    const dbResults = await this.notionClient.databasesQuery({
+      databaseId: this.notionDatabaseId,
+    });
+    const postProperties = dbResults.map((dbResult) => ({
+      ...dbResult.properties,
     }));
+    return postProperties.map((properties) => {
+      const postProperty = {} as IPostProperties;
+      Object.keys(properties).map((property) => {
+        const value = this.notionClient.propertyToJsType(
+          properties[property] as NotionProperty
+        );
+        Object.assign(postProperty, { [property]: value });
+      });
+      return postProperty;
+    });
   }
 
-  async getPostIds(): Promise<string[]> {
-    const files = await this.getPostFiles();
+  async getPostPropertiesByContentId(
+    contentId: string
+  ): Promise<IPostProperties> {
+    const properties = {} as IPostProperties;
+    const results = await this.notionClient.databasesQuery({
+      databaseId: this.notionDatabaseId,
+    });
 
-    return await Promise.all(
-      files.map((file) => {
-        const pathArray = file.relativePath.split("/");
-
-        const fileName = pathArray[pathArray.length - 1];
-        const id = fileName.replace(/\.md$|\.mdx$/, "");
-
-        return id;
-      })
-    );
-  }
-
-  getPostFileInfo(id: string, category: string[]): IPostFileInfo {
-    const result: IPostFileInfo = {
-      extension: "md",  
-      path: {
-        rootPath: "",
-        relativePath: "",
-      },
-    };
-    const fullMdFilePath = path.join(this.directory, ...category, `${id}.md`);
-    const mdExist = this.fileHandler.exists(fullMdFilePath);
-    if (mdExist) {
-      result.path.rootPath = fullMdFilePath;
-      result.path.relativePath = path.join(...category, fullMdFilePath);
-    } else {
-      result.extension = "mdx";
-      result.path.rootPath = path.join(
-        this.directory,
-        ...category,
-        `${id}.mdx`
+    const [filteredPage] = results.filter(({ properties }) => {
+      return (
+        (properties["contentId"] as NotionRichText).rich_text[0].text
+          .content === contentId
       );
-      result.path.relativePath = path.join(...category, `${id}.mdx`);
+    });
+
+    const { properties: pageProperties } = filteredPage;
+
+    Object.keys(pageProperties).map((property) => {
+      const value = this.notionClient.propertyToJsType(
+        pageProperties[property] as NotionProperty
+      );
+      Object.assign(properties, { [property]: value });
+    });
+
+    return properties;
+  }
+
+  async getPostContentByPageId(
+    params: IPostContentByPageIdRequestDTO
+  ): Promise<string> {
+    const { pageId, form } = params;
+    let content = "";
+    const blockContentList = await this.notionClient.blockList({
+      blockId: pageId,
+    });
+    blockContentList.map(
+      (blockContentList) => (content = content + blockContentList)
+    );
+    if (form === "md") {
+      content = await this.fileHandler.convertMdToHtml(content);
     }
+    return content;
+  }
+
+  async getPostContentByContentId(
+    params: IPostContentByContentIdRequestDTO
+  ): Promise<string> {
+    const { contentId, form } = params;
+    let content = "";
+    const results = await this.notionClient.databasesQuery({
+      databaseId: this.notionDatabaseId,
+    });
+
+    const [filteredPage] = results.filter(({ properties }) => {
+      return (
+        (properties["contentId"] as NotionRichText).rich_text[0].text
+          .content === contentId
+      );
+    });
+    const blockContentList = await this.notionClient.blockList({
+      blockId: filteredPage.id,
+    });
+    blockContentList.map((blockContent) => (content = content + blockContent));
+
+    if (form === "md") {
+      content = await this.fileHandler.convertMdToHtml(content);
+    }
+
+    return content;
+  }
+
+  async getPostsInfo(): Promise<IPostDTO[]> {
+    const dbResults = await this.notionClient.databasesQuery({
+      databaseId: this.notionDatabaseId,
+    });
+    const postProperties = dbResults.map((dbResult) => ({
+      ...dbResult.properties,
+    }));
+    const result: IPostDTO[] = postProperties.map((properties, index) => {
+      const postDTO = {} as IPostDTO;
+      Object.assign(postDTO, { pageId: dbResults[index].id });
+      Object.keys(properties).map((property) => {
+        const value = this.notionClient.propertyToJsType(
+          properties[property] as NotionProperty
+        );
+        Object.assign(postDTO, { [property]: value });
+      });
+      return postDTO;
+    });
+
     return result;
   }
 
-  getPostId(rootPath: string): string {
-    const pathArray = rootPath.split("/");
+  async getPostInfoByContentId(contentId: string): Promise<IPostDTO> {
+    const postDTO = {} as IPostDTO;
 
-    const fileName = pathArray[pathArray.length - 1];
-    const id = fileName.replace(/\.md$|\.mdx$/, "");
+    const results = await this.notionClient.databasesQuery({
+      databaseId: this.notionDatabaseId,
+    });
 
-    return id;
+    const [filteredPage] = results.filter(({ properties }) => {
+      return (
+        (properties["contentId"] as NotionRichText).rich_text[0].text
+          .content === contentId
+      );
+    });
+    const { properties, id } = filteredPage;
+    Object.assign(postDTO, { pageId: id });
+    Object.keys(properties).map((property) => {
+      const value = this.notionClient.propertyToJsType(
+        properties[property] as NotionProperty
+      );
+      Object.assign(postDTO, { [property]: value });
+    });
+    return postDTO;
   }
 
-  async getPostMetadata(rootPath: string): Promise<PostMetadata> {
-    const postData = await this.fileHandler.readFile(rootPath, {
-      encoding: "utf-8",
-    });
-    const matterResult = matter(postData);
-    const { data: postMetadata } = matterResult;
-    return {
-      ...(postMetadata as PostMetadata),
-    };
-  }
+  async writePost(params: ICreatePostDTO): Promise<void> {
+    const BLOCK_LIMIT = 2000;
+    const {
+      contentId,
+      title,
+      category,
+      description,
+      date,
+      tags,
+      form,
+      content,
+    } = params;
 
+    const contentBlocks: string[] = [];
 
-
-  async getPostContent(rootPath: string): Promise<Content> {
-    const fileData = await this.fileHandler.readFile(rootPath, {
-      encoding: "utf-8",
-    });
-    const { content } = this.fileHandler.convertFrontMatterToObject(
-      fileData as string
-    );
-    const fileInfo = this.fileHandler.getFileInfo(rootPath);
-    if(fileInfo.extension === "md") {
-      const processedContent = await unified()
-      .use(remarkParse)
-      .use(remarkGfm)
-      .use(remarkRehype)
-      .use(rehypePrettyCode, {
-        grid: true,
-        defaultLang: "js",
-        theme: "dark-plus",
-      })
-      .use(rehypeStringify)
-      .process(content);
-
-      const contentHtml = processedContent.toString();
-      return {
-        htmlContent: contentHtml,
-      }
-    }else {
-      return {
-        mdxSource: content,
-      }
+    for (let i = 0; i < content.length; i = i + BLOCK_LIMIT) {
+      contentBlocks.push(content.substring(i, i + BLOCK_LIMIT));
     }
+
+    await this.notionClient.pages.create({
+      parent: {
+        type: "database_id",
+        database_id: this.notionDatabaseId,
+      },
+      properties: {
+        contentId: {
+          type: "rich_text",
+          rich_text: [
+            {
+              text: {
+                content: contentId,
+              },
+            },
+          ],
+        },
+        title: {
+          type: "title",
+          title: [
+            {
+              text: {
+                content: title,
+              },
+            },
+          ],
+        },
+        description: {
+          type: "rich_text",
+          rich_text: [
+            {
+              text: {
+                content: description,
+              },
+            },
+          ],
+        },
+        date: {
+          type: "date",
+          date: {
+            start: date,
+          },
+        },
+        category: {
+          type: "rich_text",
+          rich_text: [
+            {
+              text: {
+                content: category,
+              },
+            },
+          ],
+        },
+        tags: {
+          type: "multi_select",
+          multi_select: tags.map((tag) => ({
+            name: tag,
+          })),
+        },
+        form: {
+          type: "rich_text",
+          rich_text: [
+            {
+              text: {
+                content: form,
+              },
+            },
+          ],
+        },
+      },
+      children: contentBlocks.map((contentBlock) => ({
+        paragraph: {
+          rich_text: [
+            {
+              text: {
+                content: contentBlock,
+              },
+            },
+          ],
+        },
+      })),
+    });
   }
 }

@@ -1,14 +1,25 @@
-import { IPostEntity } from "@/domain/entities/Post";
+import { IPostEntity, IPostProperties } from "@/domain/entities/Post";
 import { PostUseCase } from "@/domain/useCases/Post";
-import { IPostPath } from "@/domain/useCases/repository-interfaces/Post";
+import { ICreatePostVM } from "@/vm/Post";
 
 export class PostPresenter {
   constructor(private readonly postUseCase: PostUseCase) {}
 
-  async getAllSortedPostData(): Promise<IPostEntity[]> {
-    const allPostData = await this.postUseCase.getAllPostData();
+  async writePost(params: ICreatePostVM): Promise<void> {
+    await this.postUseCase.writePost({
+      ...params,
+      tags: params.tags.split(","),
+    });
+  }
+
+  async getPostDataFromNotion(contentId: string): Promise<IPostEntity> {
+    return await this.postUseCase.getPostDataByContentId(contentId);
+  }
+
+  async getAllSortedNotionData(): Promise<IPostEntity[]> {
+    const allPostData = await this.postUseCase.getPosts();
     return allPostData.sort((a, b) => {
-      if (a.metadata.date < b.metadata.date) {
+      if (a.date < b.date) {
         return 1;
       } else {
         return -1;
@@ -16,44 +27,11 @@ export class PostPresenter {
     });
   }
 
-  async getPostDataByRoutingPath(routingPath: string[]): Promise<IPostEntity> {
-    let id: string = "";
-    const category: string[] = [];
-
-    if (routingPath.length <= 1) {
-      id = routingPath[0];
-    } else {
-      id = routingPath[routingPath.length - 1];
-      category.push(...routingPath.slice(0, routingPath.length - 1));
-    }
-
-    return await this.postUseCase.getPostDataByIdAndCategory(id, category);
+  async getPostsProperties(): Promise<IPostProperties[]> {
+    return await this.postUseCase.getPostsProperties();
   }
 
-  async getPostRoutingPath(): Promise<{ params: { routingPath: string[] } }[]> {
-    const files = await this.postUseCase.getPostFiles();
-    return files.map((file) => {
-      const arrayPath = file.relativePath.split("/");
-      arrayPath[arrayPath.length - 1] = arrayPath[arrayPath.length - 1].replace(
-        /\.md$|\.mdx$/,
-        ""
-      );
-      return {
-        params: {
-          routingPath: arrayPath,
-        },
-      };
-    });
-  }
-
-  async getPostFiles(): Promise<IPostPath[]> {
-    return await this.postUseCase.getPostFiles();
-  }
-  
-  async getTags(): Promise<string[]> {
-    const allPostData = await this.postUseCase.getAllPostData();
-    const allTags = allPostData.map(postData => postData.metadata.tags);
-    console.log(allTags);
-    return allTags;
+  async getPostContentByContentId(contentId: string): Promise<string> {
+    return await this.postUseCase.getPostContentByContentId(contentId);
   }
 }

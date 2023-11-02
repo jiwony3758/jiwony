@@ -1,4 +1,10 @@
-import { Content, PostMetadata } from "@/domain/entities/Post";
+import {
+  ICreatePostDTO,
+  IPostContentByContentIdRequestDTO,
+  IPostContentByPageIdRequestDTO,
+  IPostDTO,
+} from "@/domain/dtos/Post";
+import { IPostProperties } from "@/domain/entities/Post";
 
 export interface IPostPath {
   rootPath: string;
@@ -11,10 +17,17 @@ export interface IPostFileInfo {
 }
 
 export interface IPostRepository {
-  getPostFiles(): Promise<IPostPath[]>;
-  getPostId(rootPath: string): string;
-  getPostIds(): Promise<string[]>;
-  getPostFileInfo(id: string, category: string[]): IPostFileInfo;
-  getPostMetadata(rootPath: string): Promise<PostMetadata>;
-  getPostContent(rootPath: string): Promise<Content>;
+  writePost(params: ICreatePostDTO): Promise<void>;
+
+  getPostsProperties(): Promise<IPostProperties[]>;
+  getPostsInfo(): Promise<IPostDTO[]>;
+  getPostInfoByContentId(contentId: string): Promise<IPostDTO>;
+
+  getPostPropertiesByContentId(contentId: string): Promise<IPostProperties>;
+  getPostContentByPageId(
+    params: IPostContentByPageIdRequestDTO
+  ): Promise<string>;
+  getPostContentByContentId(
+    params: IPostContentByContentIdRequestDTO
+  ): Promise<string>;
 }

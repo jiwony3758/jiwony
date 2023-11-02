@@ -2,6 +2,11 @@ import path from "path";
 import { ObjectEncodingOptions, existsSync } from "fs";
 import fs from "fs/promises";
 import matter from "gray-matter";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import rehypeStringify from "rehype-stringify";
 
 export interface IFileInfo {
   extension: string;
@@ -68,6 +73,10 @@ export interface IFileHandler {
    */
   getFileInfo(rootPath: string): IFileInfo;
 
+  /**
+   * md에서 html로 변경
+   */
+  convertMdToHtml(mdContent: string): Promise<string>;
 }
 
 export class FileHandler implements IFileHandler {
@@ -135,5 +144,17 @@ export class FileHandler implements IFileHandler {
     fileInfo.extension = pathArray[pathArray.length - 1].split(".")[1];
     fileInfo.rootPath = rootPath;
     return fileInfo;
+  }
+
+  async convertMdToHtml(mdContent: string): Promise<string> {
+    const processedContent = await unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .use(remarkRehype)
+      .use(rehypeStringify)
+      .process(mdContent);
+
+    const htmlContent = processedContent.toString();
+    return htmlContent;
   }
 }

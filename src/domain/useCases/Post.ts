@@ -1,63 +1,62 @@
-import { IPostEntity } from "../entities/Post";
-import { IPostPath, IPostRepository } from "./repository-interfaces/Post";
-
+import { IPostEntity, IPostProperties } from "../entities/Post";
+import { IPostRepository } from "./repository-interfaces/Post";
+import { ICreatePostDTO } from "../dtos/Post";
 
 export class PostUseCase {
   constructor(private readonly postRepository: IPostRepository) {}
 
-  async getPostFiles(): Promise<IPostPath[]> {
-    return await this.postRepository.getPostFiles();
+  async getPostsProperties(): Promise<IPostProperties[]> {
+    return await this.postRepository.getPostsProperties();
   }
 
-  async getPostIds(): Promise<string[]> {
-    return await this.postRepository.getPostIds();
-  }
+  async getPosts(): Promise<IPostEntity[]> {
+    const postsInfo = await this.postRepository.getPostsInfo();
 
-  async getPostDataByRootPath(rootPath: string): Promise<IPostEntity> {
-    const id = this.postRepository.getPostId(rootPath);
-
-    const promiseMetadata = this.postRepository.getPostMetadata(rootPath);
-    const promiseContent = this.postRepository.getPostContent(rootPath);
-    const [metadata, content] = await Promise.all([
-      promiseMetadata,
-      promiseContent,
-    ]);
-
-    return {
-      id,
-      metadata,
-      content,
-    };
-  }
-
-  async getPostDataByIdAndCategory(
-    id: string,
-    category: string[]
-  ): Promise<IPostEntity> {
-    const {
-      path: { rootPath },
-    } = this.postRepository.getPostFileInfo(id, category);
-
-    const promiseMetadata = this.postRepository.getPostMetadata(rootPath);
-    const promiseContent = this.postRepository.getPostContent(rootPath);
-    const [metadata, content] = await Promise.all([
-      promiseMetadata,
-      promiseContent,
-    ]);
-
-    return {
-      id,
-      metadata,
-      content,
-    };
-  }
-
-  async getAllPostData(): Promise<IPostEntity[]> {
-    const files = await this.postRepository.getPostFiles();
     return await Promise.all(
-      files.map(async (file) => {
-        return await this.getPostDataByRootPath(file.rootPath);
+      postsInfo.map(async (postInfo) => {
+        const content = await this.postRepository.getPostContentByPageId({
+          pageId: postInfo.pageId,
+          form: postInfo.form,
+        });
+        return {
+          contentId: postInfo.contentId,
+          pageId: postInfo.pageId,
+          title: postInfo.title,
+          description: postInfo.description,
+          category: postInfo.category,
+          date: postInfo.date,
+          tags: [...postInfo.tags],
+          form: postInfo.form,
+          visible: postInfo.visible === "true" ? true : false,
+          content,
+        };
       })
     );
+  }
+
+  async getPostDataByContentId(contentId: string): Promise<IPostEntity> {
+    const postDTO = await this.postRepository.getPostInfoByContentId(contentId);
+    const content = await this.postRepository.getPostContentByContentId({
+      contentId,
+      form: postDTO.form,
+    });
+    return {
+      ...postDTO,
+      visible: postDTO.visible === "true" ? true : false,
+      content,
+    };
+  }
+
+  async getPostContentByContentId(contentId: string): Promise<string> {
+    const properties =
+      await this.postRepository.getPostPropertiesByContentId(contentId);
+    return await this.postRepository.getPostContentByContentId({
+      contentId,
+      form: properties.form,
+    });
+  }
+
+  async writePost(params: ICreatePostDTO): Promise<void> {
+    await this.postRepository.writePost(params);
   }
 }
