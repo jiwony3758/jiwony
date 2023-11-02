@@ -1,3 +1,4 @@
+import { PostVM } from "@/vm/Post";
 import metadata from "../../../../config/metadata";
 import di from "@/di";
 
@@ -9,17 +10,19 @@ export async function GET() {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
 
-  const allPostPaths = await di.post.getPostFiles();
+  const postsProperties = await di.post.getPostsProperties();
 
-  const postsSitemap = allPostPaths
-    .map(({ relativePath }) => {
-      const withoutExtensionRelativePath = relativePath.split(".")[0];
-      return `
-      <url>
-        <loc>${siteUrl}posts/${withoutExtensionRelativePath}</loc>
-        <lastmod>${year}-${month}-${day}</lastmod>
-      </url>
-    `;
+  const postsSitemap = postsProperties
+    .map((postProperties) => {
+      const postSitemapPath = PostVM.propertiesToSitemapPath(postProperties);
+      if (postProperties.visible === "true") {
+        return `
+          <url>
+            <loc>${siteUrl}${postSitemapPath}</loc>
+            <lastmod>${year}-${month}-${day}</lastmod>
+          </url>
+        `;
+      }
     })
     .toString()
     .replaceAll(",", "");
