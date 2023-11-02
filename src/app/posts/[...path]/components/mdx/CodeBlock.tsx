@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { shadesOfPurple } from "react-syntax-highlighter/dist/esm/styles/hljs";
@@ -14,7 +14,7 @@ import { shadesOfPurple } from "react-syntax-highlighter/dist/esm/styles/hljs";
 //       alert(`copy failed ${e}`)
 //     }
 //   }
-//   return <button 
+//   return <button
 //     style={{
 //       position: "absolute",
 //     }}
@@ -23,28 +23,26 @@ import { shadesOfPurple } from "react-syntax-highlighter/dist/esm/styles/hljs";
 //     </button>
 // }
 
-
-
 export default function CodeBlock({
-  title, 
+  title,
   language,
   children,
-}: { 
-  title: string, 
-  language: string,
-  children: string 
+}: {
+  title: string;
+  language: string;
+  children: string;
 }) {
   return (
     <div className="relative">
       {/* <CopyButton target={children}/> */}
-      { title && <div className="code-title">{title}</div> }
-      <SyntaxHighlighter 
-        language={language} 
+      {title && <div className="code-title">{title}</div>}
+      <SyntaxHighlighter
+        language={language}
         style={shadesOfPurple}
-        showLineNumbers 
+        showLineNumbers
       >
         {children}
       </SyntaxHighlighter>
     </div>
-  )
-} 
+  );
+}
