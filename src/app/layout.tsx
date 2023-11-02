@@ -24,23 +24,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-        <body className={inter.className}>
-          <RecoilRootComponent>
-            <header>
-              <nav>
-                <Link
-                  href="/"
-                  style={{
-                    fontFamily: "PyeongChangPeace-Bold",
-                  }}
-                >
-                  Jiwony
-                </Link>
-              </nav>
-            </header>
-            <main>{children}</main>
-          </RecoilRootComponent>
-        </body>
+      <body className={inter.className}>
+        <RecoilRootComponent>
+          <header>
+            <nav>
+              <Link
+                href="/"
+                style={{
+                  fontFamily: "PyeongChangPeace-Bold",
+                }}
+              >
+                Jiwony
+              </Link>
+            </nav>
+          </header>
+          <main>{children}</main>
+        </RecoilRootComponent>
+      </body>
     </html>
   );
 }

@@ -10,17 +10,19 @@ export async function generateMetadata({
   params,
 }: MetadataProps): Promise<Metadata> {
   const { path } = params;
-  const { metadata: postMetadata } = await di.post.getPostDataByRoutingPath(path);
+  const { title, description, tags } = await di.post.getPostDataFromNotion(
+    path[path.length - 1]
+  );
   const stringPath = path.toString().replaceAll(",", "/");
   return {
-    title: postMetadata.title,
-    description: postMetadata.description,
-    keywords: postMetadata.tags.split(","),
+    title: title,
+    description: description,
+    keywords: tags,
     openGraph: {
-      title: postMetadata.title,
-      description: postMetadata.description,
+      title: title,
+      description: description,
       type: "website",
-      url: `${metadata.metadataBase}${stringPath}`
+      url: `${metadata.metadataBase}${stringPath}`,
     },
   };
 }
