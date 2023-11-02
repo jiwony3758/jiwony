@@ -13,10 +13,9 @@ module.exports = {
         "text-description": "var(--text-description)",
         "text-description2": "var(--text-description2)",
         "text-link": "var(--text-link)",
-        "border-primary": "var(--border-primary)"
-      }
+        "border-primary": "var(--border-primary)",
+      },
     },
   },
   plugins: [],
-}
-
+};
