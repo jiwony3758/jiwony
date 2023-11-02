@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import Link from "next/link";
 import metadata from "../../config/metadata";
+import RecoilRootComponent from "./recoil-root";
 
 const inter = Noto_Sans({
   weight: "400",
@@ -23,21 +24,23 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={inter.className}>
-        <header>
-          <nav>
-            <Link
-              href="/"
-              style={{
-                fontFamily: "PyeongChangPeace-Bold",
-              }}
-            >
-              Jiwony
-            </Link>
-          </nav>
-        </header>
-        <main>{children}</main>
-      </body>
+        <body className={inter.className}>
+          <RecoilRootComponent>
+            <header>
+              <nav>
+                <Link
+                  href="/"
+                  style={{
+                    fontFamily: "PyeongChangPeace-Bold",
+                  }}
+                >
+                  Jiwony
+                </Link>
+              </nav>
+            </header>
+            <main>{children}</main>
+          </RecoilRootComponent>
+        </body>
     </html>
   );
 }
